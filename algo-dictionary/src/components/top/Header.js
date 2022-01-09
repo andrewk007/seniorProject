@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components';
 import Sidebar from './Sidebar';
-
-
+import logo from '../../pages/logo.PNG';
 const Wrapper = styled.section`
   display:flex;
   background-color:black;
@@ -9,12 +8,15 @@ const Wrapper = styled.section`
 `;
 
 const Header = () => {
-    return (
-        <Wrapper> 
-        <Sidebar/>
-        <img src = 'logo.PNG'></img>
-        </Wrapper>
-    )
+  return (
+    <>
+      <Wrapper>
+        <Sidebar />
+        <img src={logo} />
+      </Wrapper>
+      
+    </>
+  )
 }
 
 
