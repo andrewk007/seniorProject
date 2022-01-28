@@ -11,7 +11,7 @@ body{
   font-family: 'Lato', sans-serif;
 }
 
-.about,.home,.reports,.products{
+.about,.home,.reports,.products,.algorithms{
   display:flex;
   height: 90vh;
   align-items: center;

@@ -1,10 +1,14 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Sidebar from './Sidebar';
+import '../top/Header.css';
 import logo from '../../pages/logo.PNG';
 const Wrapper = styled.section`
   display:flex;
   background-color:black;
   color:white;
+  position:-webkit-sticky;
+  position:sticky;
+  top:0px;
 `;
 
 const Header = () => {
@@ -12,9 +16,8 @@ const Header = () => {
     <>
       <Wrapper>
         <Sidebar />
-        <img src={logo} />
+        <img src={logo} alt = "logo" />
       </Wrapper>
-      
     </>
   )
 }

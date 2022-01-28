@@ -16,5 +16,11 @@ export const SidebarData = [
         path: '/about',
         icon: <FcIcons.FcAbout/>,
         className: 'nav-text'
+    },
+    {
+        title: 'Algorithms',
+        path: '/Algorithms',
+        icon: <FcIcons.FcGallery/>,
+        className: 'nav-text'
     }
 ]
