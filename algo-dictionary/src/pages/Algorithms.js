@@ -7,10 +7,9 @@ function Algorithms() {
     return (
         <div className = 'algorithms'>
             <h1> Algorithms</h1>
-            <Canvas/> 
             <Canvas/>
-            <Canvas/>
-            
+   
+
         </div>
     )
 }

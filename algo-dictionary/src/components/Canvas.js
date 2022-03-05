@@ -11,10 +11,8 @@ const Wrapper = styled.section`
 
 const Canvas = () => {
     return(
-        <>
         <Wrapper>
         </Wrapper>
-        </>
     )
 }
 
