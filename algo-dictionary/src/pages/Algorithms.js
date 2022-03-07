@@ -1,8 +1,7 @@
 import React from 'react'
 import '../pages/Algorithms.css'
-
+import {Link, NavLink} from "react-router-dom";
 import styled from 'styled-components';
-
 const Wrapper = styled.section`
   display:flex;
   background-color:white;
@@ -10,25 +9,30 @@ const Wrapper = styled.section`
   width:auto;
   height:auto;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  
 `;
 const algos = [
     {
-        title:'BFS'
+        title:'BFS',
+        link: '/bfs'
 },
 {
-    title: 'Fulkerson'
+    title:'shortestPath',
+    link: '/shortest'
 }
+
 ];
-function Algorithms() {
+const Algorithms =()=>{
     return (
         <div className = 'algorithms'>
             <h1> Algorithms</h1>
             {algos.map(function(algo){
-                    return <Wrapper>{algo.title} </Wrapper>;
+                    return <Wrapper>
+                        <NavLink to = {algo.link}>
+                            {algo.title}
+                        </NavLink>
+                    </Wrapper>
                 })}
-   
-
+        
         </div>
     )
 }
