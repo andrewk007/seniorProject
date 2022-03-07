@@ -1,6 +1,6 @@
 import React from 'react'
 import '../pages/Algorithms.css'
-import {Link, NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import styled from 'styled-components';
 const Wrapper = styled.section`
   display:flex;
@@ -27,9 +27,9 @@ const Algorithms =()=>{
             <h1> Algorithms</h1>
             {algos.map(function(algo){
                     return <Wrapper>
-                        <NavLink to = {algo.link}>
+                        <Link style = {{textDecoration:'none'}} to = {algo.link}>
                             {algo.title}
-                        </NavLink>
+                        </Link>
                     </Wrapper>
                 })}
         
