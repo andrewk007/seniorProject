@@ -12,10 +12,12 @@ const Wrapper = styled.section`
 `;
 const algos = [
     {
+        id: 1,
         title:'BFS',
         link: '/bfs'
 },
 {
+    id: 2,
     title:'shortestPath',
     link: '/shortest'
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Graph(){
+const Graph = () => {
   const Node = styled.span`
   display: block;
   color:white;
@@ -12,7 +12,7 @@ function Graph(){
   background: radial-gradient(circle at 100px 100px, white, #000);
 `;
     
-    const vertices = ['a','b','c'];
+    const vertices = ['a','b','c','e','f','g','h','i'];
         return (
             <>
               {vertices.map(function(name) {

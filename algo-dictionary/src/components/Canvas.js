@@ -1,24 +1,32 @@
-import React from 'react'
-
-import styled from 'styled-components';
-
-const Wrapper = styled.section`
-  display:flex;
-  background-color:white;
-  color:black;
-  width:100%;
-  height:100%;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-`;
+import React, {useRef,useEffect} from 'react'
 
 
 
-function Canvas() {
+const Canvas = () =>  {
+  const canvasRef = useRef(null)
+
+  const draw = ctx => {
+    ctx.fillStyle = '#000000'
+    ctx.beginPath()
+    ctx.arc(50, 100, 20, 0, 2*Math.PI)
+    ctx.fill()
+  }
+
+
+useEffect(()=> {
+  const canvas = canvasRef.current
+  const context = canvas.getContext('2d')
+
+  draw(context)
+},[draw])
+
+
     return (
-        <Wrapper>
+          <canvas ref = {canvasRef} >
 
-        </Wrapper>
-            
+
+
+          </canvas>
     );
 }
 
