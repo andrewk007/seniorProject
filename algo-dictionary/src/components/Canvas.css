@@ -1,4 +1,3 @@
-.canvas{
-    border:1px solid blue;
-    background-color:black
+#canvas{
+    z-index:0;
 }

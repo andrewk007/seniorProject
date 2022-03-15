@@ -1,33 +1,33 @@
-import React, {useRef,useEffect} from 'react'
-
-
-
-const Canvas = () =>  {
-  const canvasRef = useRef(null)
-
-  const draw = ctx => {
-    ctx.fillStyle = '#000000'
-    ctx.beginPath()
-    ctx.arc(50, 100, 20, 0, 2*Math.PI)
-    ctx.fill()
+import React, { useState, useEffect } from 'react';
+import { fabric } from 'fabric';
+const Canvas = () => {
+  const [canvas, setCanvas] = useState('');
+  useEffect(() => {
+    setCanvas(initCanvas());
+  }, []);  
+  
+  const initCanvas = () => (
+    new fabric.Canvas('canvas', {
+      height: 800,
+      width: 800,
+      backgroundColor: 'pink'
+    })
+  );  
+  const addCircle = canvi => {
+    const circle = new fabric.Circle({
+      radius: 30, fill: '#f55', top: 100, left: 100
+    });
+    canvi.add(circle);
+    canvi.renderAll();
   }
-
-
-useEffect(()=> {
-  const canvas = canvasRef.current
-  const context = canvas.getContext('2d')
-
-  draw(context)
-},[draw])
-
-
-    return (
-          <canvas ref = {canvasRef} >
-
-
-
-          </canvas>
-    );
+  return(
+    <div>
+      <h1>Fabric.js on React - fabric.Canvas('...')</h1>
+      <button onClick={() => addCircle(canvas)}>Add Node</button>
+     <br/><br/>
+     <canvas id="canvas" />
+    </div>
+  );
 }
 
 export default Canvas
