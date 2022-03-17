@@ -1,9 +1,8 @@
 import React,{Component} from 'react'
 import '../AlgoPages/BFS.css'
 import Start from '../../components/Start'
-import Graph from '../../components/Graph'
 import Canvas from '../../components/Canvas'
-import {useState} from 'react'
+
 
 const BFS =() => {
         return (
