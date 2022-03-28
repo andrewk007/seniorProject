@@ -17,6 +17,12 @@ const Canvas = () => {
       
     })
   )
+  const createNode=(canvi)=>{
+    canvi.add(
+      makeCircle(250,250,null,null)
+    )
+    canvi.renderAll();
+  }
   const makeCircle = (left,top,line1,line2,line3,line4)=>{
     const circle = new fabric.Circle({
       left:left,
@@ -72,7 +78,8 @@ const constructGraph=(canvi)=>{
 }
   return(
     <div>
-      <button onClick={() => constructGraph(canvas)}>Add Node</button>
+      <button onClick={() => constructGraph(canvas)}>Create Graph</button>
+      <button onClick={()=>createNode(canvas)}>Add Node</button>
      <br/><br/>
      <canvas id="canvas" />
     </div>

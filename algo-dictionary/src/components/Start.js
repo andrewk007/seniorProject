@@ -14,6 +14,8 @@ function Start(){
             <Button onClick = {handleClick}>
             <FaPlay/> 
             </Button>    
+            <p>Visited: </p>
+            <p>Queue</p>
             
             </>
         );
