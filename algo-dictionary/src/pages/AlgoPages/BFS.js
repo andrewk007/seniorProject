@@ -11,7 +11,7 @@ const BFS =() => {
            <h1> BFS- Breadth First Search</h1>
            <h2> Time Complexity: O(V + E) </h2>
          <h3>Data Structure: Graph</h3>
-         <p>dfd</p>
+         <p></p>
        </header>
        <main class="page-main">
        </main>
@@ -26,6 +26,7 @@ const BFS =() => {
      </div>
          );
     }
+    
     
 
 export default BFS
