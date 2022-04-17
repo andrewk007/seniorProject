@@ -1,53 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { fabric } from 'fabric';
 
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
-  const [optionType,setOptionType] = useState('Cursor')
+  const [data,setData] = useState('cursor')
+  const data1 = React.useRef(data)
+  const count1 = React.useRef(0)
+  const setData1 = x => {
+    data1.current = x;
+    setData(x);
+    }
+    const setCount1 = x => {
+      count1.current = x+1;
+      setCount(x)
+    }
   
   useEffect(()=>{
     setCanvas(initCanvas());
 
   },[])
-
-  useEffect(() => { //runs every time it renders, and renders every time optionType changes
-    console.log("Changing option button")
-    console.log("became: ",optionType)
-    if (optionType==='Clear')
-    createClear(canvas) 
-    if (optionType === 'Edge')
-    createEdge(canvas)
-    if (optionType==='Node')
+  useEffect(()=>{
+    console.log("Rerendered!")
+    console.log("this is our new state: ",data1.current)
+    if (data1.current === 'node'){
+      console.log("this is equal to node!: ",data1.current)
     createNode(canvas)
-    
-    
-  }, [optionType]);  
-  
+    }
+  },[data1.current])
+  const setAction= (event) =>{
+    console.log("We have changed radio buttons!!!!1")
+    console.log(event.target.value);
+    setData1(event.target.value)
+  }
+  const addedNode = () =>{
+    console.log("Added node!")
+    setCount1(count1.current)
+  }
+  const createNode=(canvi)=>{
+    console.log("Running create node")
+   canvi.on('mouse:move',function(e){
+    if (data1.current === 'node'){
+    addedNode()
+    console.log("total nodes:",count1.current)
+     console.log(e.e.clientX)
+     console.log("this is running!!!!")
+     console.log(data1.current)
+  }
+  else{
+    console.log("dont create node")
+  }
+   });
+}
+  const createClear=(canvi)=>{
+    console.log("Activated createClear")
+    setCount(prevCount => prevCount = 0)
+    canvi.remove.apply(canvi,canvi.getObjects())
+
+    canvi.renderAll();
+  }
+
   const initCanvas = () => (
     new fabric.Canvas('canvas', {
       selection:true
     })
   )
-  const createClear=(canvi)=>{
-    setCount(prevCount => prevCount = 0)
-    canvi.remove.apply(canvi,canvi.getObjects())
-    canvi.renderAll();
-  }
+
   
-  const createNode=(canvi)=>{
-    setCount(prevCount => prevCount+1)
-    console.log(count)
-    if (count === 0){
-      canvi.add(makeCircle(250,250,count,null,null,null,null,"red"))
-    }
-    else{
-    canvi.add(
-      makeCircle(250,250,count,null,null,null,null,"white")
-    )
-    }
-    canvi.renderAll();
-  }
+ 
   const makeCircle = (left,top,id,line1,line2,line3,line4,fill)=>{
     const circle = new fabric.Circle({
       id: id,
@@ -100,12 +120,23 @@ canvi.renderAll()
 }
   return(
     <div>
-    <button onClick={()=>setOptionType('Cursor')}>Cursor</button>
-      <button onClick={()=>setOptionType('Node')}>Add Node</button>
-      <button onClick={()=>setOptionType('Edge')}>Add Edge</button>
-      <button onClick={()=>setOptionType('Clear')}>Clear Board</button>
-     <br/><br/>
-     <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid red'}} />
+      <p>Visited: </p>
+      <p>Queue</p>
+      <div onChange={setAction.bind(this)}> 
+      <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
+      />
+      <b>Cursor  </b>
+      <input class="switch" name="iconOn" type="radio" id="on" value = "node"
+      />
+      <b>Node</b>
+      <input class="switch" name="iconOn" type="radio" id="off" value = "edge"
+      />
+      <b>Edge</b>
+      </div>
+      <button onClick={()=>createClear(canvas)}>
+        <b>Clear Board</b>
+      </button>
+     <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid black'}} />
     </div>
   );
 }
