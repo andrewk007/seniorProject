@@ -4,22 +4,34 @@ import { fabric } from 'fabric';
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
+  const [optionType,setOptionType] = useState('Cursor')
   
-  useEffect(() => {
+  useEffect(()=>{
     setCanvas(initCanvas());
-  }, []);  
+
+  },[])
+
+  useEffect(() => { //runs every time it renders, and renders every time optionType changes
+    console.log("Changing option button")
+    console.log("became: ",optionType)
+    if (optionType==='Clear')
+    createClear(canvas) 
+    if (optionType === 'Edge')
+    createEdge(canvas)
+    if (optionType==='Node')
+    createNode(canvas)
+    
+    
+  }, [optionType]);  
   
   const initCanvas = () => (
     new fabric.Canvas('canvas', {
-      selection:false,
-      height: 500,
-      width: 500,
-      backgroundColor: 'white',
+      selection:true
     })
   )
-  const clearBoard=(canvi)=>{
+  const createClear=(canvi)=>{
     setCount(prevCount => prevCount = 0)
-    canvi.clear();
+    canvi.remove.apply(canvi,canvi.getObjects())
     canvi.renderAll();
   }
   
@@ -63,7 +75,7 @@ const Canvas = () => {
       evented:false,
     })
 }
-const addEdge = (canvi) =>{
+const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
 //draw line between the two objects
@@ -81,45 +93,19 @@ canvi.on('mouse:down',(e) => {
       p.line1 && p.line1.set({ 'x2': p.left, 'y2': p.top });
      
     });
-    canvi.renderAll();
   }
 })
+canvi.renderAll()
 
-}
-const constructGraph=(canvi)=>{
-  const line = makeLine([ 250, 125, 250, 175 ]),
-    line2 = makeLine([ 250, 175, 250, 250 ]),
-    line3 = makeLine([ 250, 250, 300, 350]),
-    line4 = makeLine([ 250, 250, 200, 350]),
-    line5 = makeLine([ 250, 175, 175, 225 ]),
-    line6 = makeLine([ 250, 175, 325, 225 ]);
-    canvi.add(line, line2, line3, line4, line5, line6);
-    canvi.add(
-      makeCircle(line.get('x1'), line.get('y1'), null, line),
-      makeCircle(line.get('x2'), line.get('y2'), line, line2, line5, line6),
-      makeCircle(line2.get('x2'), line2.get('y2'), line2, line3, line4),
-      makeCircle(line3.get('x2'), line3.get('y2'), line3),
-      makeCircle(line4.get('x2'), line4.get('y2'), line4),
-      makeCircle(line5.get('x2'), line5.get('y2'), line5),
-      makeCircle(line6.get('x2'), line6.get('y2'), line6)
-    );
-    canvi.on('object:moving', function(e) {
-      var p = e.target;
-      p.line1 && p.line1.set({ 'x2': p.left, 'y2': p.top });
-      p.line2 && p.line2.set({ 'x1': p.left, 'y1': p.top });
-      p.line3 && p.line3.set({ 'x1': p.left, 'y1': p.top });
-      p.line4 && p.line4.set({ 'x1': p.left, 'y1': p.top });
-    });
-    canvi.renderAll();
 }
   return(
     <div>
-      <button onClick={() => constructGraph(canvas)}>Create Graph</button>
-      <button onClick={()=>createNode(canvas)}>Add Node</button>
-      <button onClick={()=>addEdge(canvas)}>Add Edge</button>
-      <button onClick={()=>clearBoard(canvas)}>Clear Board</button>
+    <button onClick={()=>setOptionType('Cursor')}>Cursor</button>
+      <button onClick={()=>setOptionType('Node')}>Add Node</button>
+      <button onClick={()=>setOptionType('Edge')}>Add Edge</button>
+      <button onClick={()=>setOptionType('Clear')}>Clear Board</button>
      <br/><br/>
-     <canvas id="canvas" />
+     <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid red'}} />
     </div>
   );
 }
