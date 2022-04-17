@@ -27,6 +27,10 @@ const Canvas = () => {
       console.log("this is equal to node!: ",data1.current)
     createNode(canvas)
     }
+    if (data1.current === 'edge'){
+      console.log("this is equal to edge: ",data1.current)
+      createEdge(canvas)
+    }
   },[data1.current])
   const setAction= (event) =>{
     console.log("We have changed radio buttons!!!!1")
@@ -39,7 +43,7 @@ const Canvas = () => {
   }
   const createNode=(canvi)=>{
     console.log("Running create node")
-   canvi.on('mouse:move',function(e){
+   canvi.on('mouse:down',function(e){
     if (data1.current === 'node'){
     addedNode()
     console.log("total nodes:",count1.current)
@@ -49,7 +53,9 @@ const Canvas = () => {
   }
   else{
     console.log("dont create node")
+    canvi.off('mouse:down')
   }
+
    });
 }
   const createClear=(canvi)=>{
@@ -68,7 +74,7 @@ const Canvas = () => {
 
   
  
-  const makeCircle = (left,top,id,line1,line2,line3,line4,fill)=>{
+  const makeCircle = (left,top,id,line1,line2,line3,line4,fill,opacity)=>{
     const circle = new fabric.Circle({
       id: id,
       left:left,
@@ -76,7 +82,8 @@ const Canvas = () => {
       strokeWidth:5,
       radius:12,
       fill: fill,
-      stroke: '#666'
+      stroke: '#666',
+      opacity: opacity
     })
     circle.hasControls = circle.hasBorders = false;
 
@@ -101,18 +108,11 @@ const createEdge = (canvi) =>{
 //draw line between the two objects
 
 canvi.on('mouse:down',(e) => {
-  if (e.target){
-    console.log("clicked on first object")
-    console.log(e.e.clientY)
-    console.log(e.e.clientX)
-    
-    var line = makeLine([e.e.clientX,e.e.clientY])
-
-    canvi.on('object:moving', function(e) {
-      var p = e.target;
-      p.line1 && p.line1.set({ 'x2': p.left, 'y2': p.top });
-     
-    });
+  if (data1.current === 'edge'){
+    console.log("we are in edge!!!!!")
+  }
+  else{
+    console.log("we are not doing edge!!!!!")
   }
 })
 canvi.renderAll()
