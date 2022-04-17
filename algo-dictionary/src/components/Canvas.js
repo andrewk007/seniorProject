@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
-  const [data,setData] = useState('cursor')
+  const [data,setData] = useState('cursor') //canvas drawing options
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const setData1 = x => {
@@ -33,7 +33,7 @@ const Canvas = () => {
     }
   },[data1.current])
   const setAction= (event) =>{
-    console.log("We have changed radio buttons!!!!1")
+    console.log("We have changed radio buttons!!!!")
     console.log(event.target.value);
     setData1(event.target.value)
   }
@@ -42,25 +42,34 @@ const Canvas = () => {
     setCount1(count1.current)
   }
   const createNode=(canvi)=>{
+    canvi.off('mouse:down')
     console.log("Running create node")
    canvi.on('mouse:down',function(e){
-    if (data1.current === 'node'){
+    if (data1.current === 'node' && e.target === null){
+
     addedNode()
-    console.log("total nodes:",count1.current)
-     console.log(e.e.clientX)
-     console.log("this is running!!!!")
-     console.log(data1.current)
+    console.log("total nodes:",count1.current);
+    const mouseX = e.e.clientX;
+    const mouseY = e.e.clientY;
+    const rect = new fabric.Rect({
+      left:100,
+      top:100,
+      fill:'red',
+      width:20,
+      height:20
+    })
+    canvi.add(rect);
+    console.log(data1.current)
   }
   else{
     console.log("dont create node")
-    canvi.off('mouse:down')
   }
-
+canvi.renderAll();
    });
 }
   const createClear=(canvi)=>{
     console.log("Activated createClear")
-    setCount(prevCount => prevCount = 0)
+    setCount1(-1)
     canvi.remove.apply(canvi,canvi.getObjects())
 
     canvi.renderAll();
@@ -74,7 +83,7 @@ const Canvas = () => {
 
   
  
-  const makeCircle = (left,top,id,line1,line2,line3,line4,fill,opacity)=>{
+  const makeCircle = (left,top,id,line1,line2,line3,line4,fill)=>{
     const circle = new fabric.Circle({
       id: id,
       left:left,
@@ -83,9 +92,8 @@ const Canvas = () => {
       radius:12,
       fill: fill,
       stroke: '#666',
-      opacity: opacity
     })
-    circle.hasControls = circle.hasBorders = false;
+    circle.hasControls = circle.hasBorders = true;
 
     circle.line1 = line1;
     circle.line2 = line2;
@@ -106,16 +114,18 @@ const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
 //draw line between the two objects
-
+canvi.off('mouse:down')
 canvi.on('mouse:down',(e) => {
   if (data1.current === 'edge'){
     console.log("we are in edge!!!!!")
   }
   else{
     console.log("we are not doing edge!!!!!")
+    console.log(count1.current)
   }
+  canvi.renderAll();
 })
-canvi.renderAll()
+
 
 }
   return(
