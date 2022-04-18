@@ -108,8 +108,7 @@ canvi.renderAll();
       fill:'red',
       stroke:'red',
       strokeWidth:5,
-      selectable:false,
-      evented:false,
+      selectable:false
     })
 }
 const createEdge = (canvi) =>{
@@ -129,7 +128,11 @@ canvi.on('mouse:down',(e) => {
           console.log("second node clicked!")
           const mouseX2 = j.e.layerX;
           const mouseY2 = j.e.layerY;
-          //rerender component
+          const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
+          canvi.add(newLine);
+          canvi.renderAll();
+          console.log("attempted line creation!")
+          //rerender component to reset to first node search click
           if (edgeAttempt.current === true){
             setEdgeAttempt(false)
           }
@@ -155,6 +158,7 @@ canvi.on('mouse:down',(e) => {
   else{
     console.log("we are not doing edge!!!!!")
     console.log(count1.current)
+    
   }
   canvi.renderAll();
 })
