@@ -5,8 +5,12 @@ const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
   const [data,setData] = useState('cursor') //canvas drawing options
+  const [secondEdge,setEdge] = useState(false)
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
+  const edgeAttempt = React.useRef(secondEdge)
+
+
   const setData1 = x => {
     data1.current = x;
     setData(x);
@@ -15,7 +19,10 @@ const Canvas = () => {
       count1.current = x+1;
       setCount(x)
     }
-  
+    const setEdgeAttempt = x =>{
+      edgeAttempt.current = x;
+      setEdge(x)
+    }
   useEffect(()=>{
     setCanvas(initCanvas());
 
@@ -34,7 +41,8 @@ const Canvas = () => {
     if (data1.current === 'cursor'){
       console.log("this is equal to cursor: ",data1.current)
     }
-  },[data1.current])
+
+  },[data1.current,edgeAttempt.current])
   const setAction= (event) =>{
     console.log("We have changed radio buttons!!!!")
     console.log(event.target.value);
@@ -111,15 +119,30 @@ const createEdge = (canvi) =>{
 //second mouse down: if its an object get the second coordinates
 //draw line between the two objects
 canvi.off('mouse:down');
-canvi.on('mouse:down',(e) => {
+canvi.on('mouse:down',(e) => { 
+  const mouseX1 = e.e.layerX;
+  const mouseY1 = e.e.layerY;
+  console.log("First mouse coordinate")
+  console.log(mouseX1,mouseY1)
   if (data1.current === 'edge'){
-    console.log("we are in edge!!!!!")
+    console.log("Edge attempt: this should be false,i.e., first click!")
+    console.log(edgeAttempt.current)
     if (e.target){//we have clicked on the first node
       canvi.off('mouse:down')
       canvi.on('mouse:down',(j)=>{
+        const mouseX2 = j.e.layerX;
+        const mouseY2 = j.e.layerY;
+        console.log("Second mouse coordinate")
+        console.log(mouseX2,mouseY2)
         if (j.target){// we have clicked on second node
           console.log("second node clicked!")
-          canvi.renderAll();// delete this?
+          //rerender component
+          if (edgeAttempt.current === true){
+            setEdgeAttempt(false)
+          }
+          else{
+            setEdgeAttempt(true)
+          }
         }
       })
     }
@@ -131,6 +154,8 @@ canvi.on('mouse:down',(e) => {
   canvi.renderAll();
 })
 }
+
+
   return(
     <div>
       <p>Visited: </p>
