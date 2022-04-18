@@ -94,6 +94,7 @@ canvi.renderAll();
       radius:12,
       fill: fill,
       stroke: '#666',
+
     })
     circle.hasControls = circle.hasBorders = true;
 
@@ -108,7 +109,7 @@ canvi.renderAll();
       fill:'red',
       stroke:'red',
       strokeWidth:5,
-      selectable:false
+      selectable:true
     })
 }
 const createEdge = (canvi) =>{
@@ -119,15 +120,18 @@ canvi.off('mouse:down');
 canvi.on('mouse:down',(e) => { 
   if (data1.current === 'edge'){
     if (e.target){//we have clicked on the first node
-      const mouseX1 = e.e.layerX;
-      const mouseY1 = e.e.layerY;
+      var obj1 = canvi.getActiveObject();
+      const mouseX1 = obj1.left;
+      const mouseY1 = obj1.top;
       console.log("This is a node object: first clicked")
       canvi.off('mouse:down')
       canvi.on('mouse:down',(j)=>{
         if (j.target){// we have clicked on second node
           console.log("second node clicked!")
-          const mouseX2 = j.e.layerX;
-          const mouseY2 = j.e.layerY;
+          var obj2 = canvi.getActiveObject();
+
+          const mouseX2 = obj2.left;
+          const mouseY2 = obj2.top;
           const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
           canvi.add(newLine);
           canvi.renderAll();
@@ -158,7 +162,6 @@ canvi.on('mouse:down',(e) => {
   else{
     console.log("we are not doing edge!!!!!")
     console.log(count1.current)
-    
   }
   canvi.renderAll();
 })
