@@ -9,8 +9,6 @@ const Canvas = () => {
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
-
-
   const setData1 = x => {
     data1.current = x;
     setData(x);
@@ -120,22 +118,17 @@ const createEdge = (canvi) =>{
 //draw line between the two objects
 canvi.off('mouse:down');
 canvi.on('mouse:down',(e) => { 
-  const mouseX1 = e.e.layerX;
-  const mouseY1 = e.e.layerY;
-  console.log("First mouse coordinate")
-  console.log(mouseX1,mouseY1)
   if (data1.current === 'edge'){
-    console.log("Edge attempt: this should be false,i.e., first click!")
-    console.log(edgeAttempt.current)
     if (e.target){//we have clicked on the first node
+      const mouseX1 = e.e.layerX;
+      const mouseY1 = e.e.layerY;
+      console.log("This is a node object: first clicked")
       canvi.off('mouse:down')
       canvi.on('mouse:down',(j)=>{
-        const mouseX2 = j.e.layerX;
-        const mouseY2 = j.e.layerY;
-        console.log("Second mouse coordinate")
-        console.log(mouseX2,mouseY2)
         if (j.target){// we have clicked on second node
           console.log("second node clicked!")
+          const mouseX2 = j.e.layerX;
+          const mouseY2 = j.e.layerY;
           //rerender component
           if (edgeAttempt.current === true){
             setEdgeAttempt(false)
@@ -144,7 +137,19 @@ canvi.on('mouse:down',(e) => {
             setEdgeAttempt(true)
           }
         }
+        else{
+          console.log("second mouse click not an object model!")
+          if (edgeAttempt.current === true){
+            setEdgeAttempt(false)
+          }
+          else{
+            setEdgeAttempt(true)
+          }
+        }
       })
+    }
+    else{
+      console.log("we are clicking on a non-node object!")
     }
   }
   else{
