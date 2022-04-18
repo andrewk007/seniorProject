@@ -31,6 +31,9 @@ const Canvas = () => {
       console.log("this is equal to edge: ",data1.current)
       createEdge(canvas)
     }
+    if (data1.current === 'cursor'){
+      console.log("this is equal to cursor: ",data1.current)
+    }
   },[data1.current])
   const setAction= (event) =>{
     console.log("We have changed radio buttons!!!!")
@@ -49,16 +52,10 @@ const Canvas = () => {
 
     addedNode()
     console.log("total nodes:",count1.current);
-    const mouseX = e.e.clientX;
-    const mouseY = e.e.clientY;
-    const rect = new fabric.Rect({
-      left:100,
-      top:100,
-      fill:'red',
-      width:20,
-      height:20
-    })
-    canvi.add(rect);
+    const mouseX = e.e.layerX;
+    const mouseY = e.e.layerY;
+    const circle = makeCircle(mouseX,mouseY,count1.current,null,null,null,null,'red')
+    canvi.add(circle);
     console.log(data1.current)
   }
   else{
@@ -67,6 +64,7 @@ const Canvas = () => {
 canvi.renderAll();
    });
 }
+
   const createClear=(canvi)=>{
     console.log("Activated createClear")
     setCount1(-1)
@@ -81,8 +79,6 @@ canvi.renderAll();
     })
   )
 
-  
- 
   const makeCircle = (left,top,id,line1,line2,line3,line4,fill)=>{
     const circle = new fabric.Circle({
       id: id,
@@ -114,10 +110,19 @@ const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
 //draw line between the two objects
-canvi.off('mouse:down')
+canvi.off('mouse:down');
 canvi.on('mouse:down',(e) => {
   if (data1.current === 'edge'){
     console.log("we are in edge!!!!!")
+    if (e.target){//we have clicked on the first node
+      canvi.off('mouse:down')
+      canvi.on('mouse:down',(j)=>{
+        if (j.target){// we have clicked on second node
+          console.log("second node clicked!")
+          canvi.renderAll();// delete this?
+        }
+      })
+    }
   }
   else{
     console.log("we are not doing edge!!!!!")
@@ -125,8 +130,6 @@ canvi.on('mouse:down',(e) => {
   }
   canvi.renderAll();
 })
-
-
 }
   return(
     <div>
