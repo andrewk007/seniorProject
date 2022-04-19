@@ -3,8 +3,9 @@ import React, { useState, useEffect,useRef } from 'react';
 
 import { fabric } from 'fabric';
 
+//algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
 //creation of underlying graph model:
-//graph model must be able to be directed and undirected (..must change things
+//undirected, unweighted graph (first version)
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
 
@@ -12,21 +13,62 @@ import { fabric } from 'fabric';
 //miscellaneous issues: concerning canvas movement
 //sticky node moving
 //***only most recent edge created gets moved (no multi edge dynamic movement) */
+//user can specify root node
+
+
+//after all that (BRUH) finally i can implement a BFS, then animation to correspond with that.
+
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
   const [data,setData] = useState('cursor') //canvas drawing options
   const [secondEdge,setEdge] = useState(false)
+  const [graph,setGraph] = useState({})
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
+  
   //storing the number of edges and number of nodes
-
+class Graph{
+  constructor(){
+    this.adjacencyList = {};
+  }
+  addVertex(vertex){
+    if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+  }
+  addEdge(vertex1,vertex2){
+    if (this.adjacencyList[vertex1]&&this.adjacencyList[vertex2]){
+      this.adjacencyList[vertex1].push(vertex2);
+      this.adjacencyList[vertex2].push(vertex1);
+    }
+  }
+  removeEdge(vertex1,vertex2){
+    if (this.adjacencyList[vertex1] && this.adjacencyList[vertex2]){
+      this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+        (vertex) => vertex !== vertex2
+      );
+    }
+  }
+  removeVertex(vertex){
+    if (this.adjacencyList[vertex]){
+      this.adjacencyList[vertex].forEach((v) => this.removeEdge(vertex,v));
+      delete this.adjacencyList[vertex];
+    }
+  }
+  printGraph(){
+    for (const[key,value] of Object.entries(this.adjacencyList)){
+      console.log(key,value);
+    }
+    console.log("TEST");
+  }
+}
+const GRAPH = graph;
 
   const setData1 = x => {
     data1.current = x;
     setData(x);
     }
+
     const setCount1 = x => {
       count1.current = x+1;
       setCount(x)
@@ -37,11 +79,14 @@ const Canvas = () => {
     }
   useEffect(()=>{
     setCanvas(initCanvas());
-
+    //initialize new graph data structure on page creation
+    const newGraph = new Graph();
+    setGraph(newGraph);
   },[])
   useEffect(()=>{
     console.log("Rerendered!");
     console.log("this is our new state: ",data1.current);
+
     if (data1.current === 'node'){
       console.log("this is equal to node!: ",data1.current);
     createNode(canvas);
@@ -54,7 +99,7 @@ const Canvas = () => {
       console.log("this is equal to cursor: ",data1.current)
     }
 
-  },[data1.current,edgeAttempt.current])
+  },[data1.current,edgeAttempt.current,graph])
   const setAction= (event) =>{
     console.log("We have changed radio buttons!!!!")
     console.log(event.target.value);
@@ -70,6 +115,11 @@ const Canvas = () => {
    canvi.on('mouse:down',function(e){
     if (data1.current === 'node' && e.target === null){
     addedNode()
+    //add node with underlying graph
+    GRAPH.addVertex(count1.current);
+    console.log("underlying graph: ")
+    GRAPH.printGraph();
+    setGraph(GRAPH);
     console.log("total nodes:",count1.current);
     const mouseX = e.e.layerX;
     const mouseY = e.e.layerY;
@@ -83,14 +133,11 @@ const Canvas = () => {
 canvi.renderAll();
    });
 }
-  const createCursor = (canvi) =>{
-    canvi.off('object:moving')
-  }
   const createClear=(canvi)=>{
     console.log("Activated createClear")
-    setCount1(-1)
+    setGraph(new Graph());
+    setCount1(-1);
     canvi.remove.apply(canvi,canvi.getObjects())
-
     canvi.renderAll();
   }
 
@@ -139,6 +186,7 @@ canvi.on('mouse:down',(e) => {
       var obj1 = canvi.getActiveObject();
       const mouseX1 = obj1.left;
       const mouseY1 = obj1.top;
+      const firstID = obj1.get('id');
       console.log("This is a node object: first clicked")
       canvi.off('mouse:down')
       canvi.on('mouse:down',(j)=>{
@@ -147,6 +195,10 @@ canvi.on('mouse:down',(e) => {
           var obj2 = canvi.getActiveObject();
           const mouseX2 = obj2.left;
           const mouseY2 = obj2.top;
+          const secondID = obj2.get('id');
+          GRAPH.addEdge(firstID,secondID);
+          GRAPH.printGraph();
+          setGraph(GRAPH);
           const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
           canvi.add(newLine);
           newLine.sendToBack();
