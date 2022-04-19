@@ -1,6 +1,17 @@
 import React, { useState, useEffect,useRef } from 'react';
+
+
 import { fabric } from 'fabric';
 
+//creation of underlying graph model:
+//graph model must be able to be directed and undirected (..must change things
+//for graphic(add triangle in add line))
+//graph model must have ability to be weighted (i.e. have weighted edges)
+
+
+//miscellaneous issues: concerning canvas movement
+//sticky node moving
+//***only most recent edge created gets moved (no multi edge dynamic movement) */
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
@@ -9,6 +20,9 @@ const Canvas = () => {
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
+  //storing the number of edges and number of nodes
+
+
   const setData1 = x => {
     data1.current = x;
     setData(x);
@@ -26,15 +40,15 @@ const Canvas = () => {
 
   },[])
   useEffect(()=>{
-    console.log("Rerendered!")
-    console.log("this is our new state: ",data1.current)
+    console.log("Rerendered!");
+    console.log("this is our new state: ",data1.current);
     if (data1.current === 'node'){
-      console.log("this is equal to node!: ",data1.current)
-    createNode(canvas)
+      console.log("this is equal to node!: ",data1.current);
+    createNode(canvas);
     }
     if (data1.current === 'edge'){
-      console.log("this is equal to edge: ",data1.current)
-      createEdge(canvas)
+      console.log("this is equal to edge: ",data1.current);
+      createEdge(canvas);
     }
     if (data1.current === 'cursor'){
       console.log("this is equal to cursor: ",data1.current)
@@ -51,11 +65,10 @@ const Canvas = () => {
     setCount1(count1.current)
   }
   const createNode=(canvi)=>{
-    canvi.off('mouse:down')
-    console.log("Running create node")
+    canvi.off('mouse:down');
+    console.log("Running create node");
    canvi.on('mouse:down',function(e){
     if (data1.current === 'node' && e.target === null){
-
     addedNode()
     console.log("total nodes:",count1.current);
     const mouseX = e.e.layerX;
@@ -70,7 +83,9 @@ const Canvas = () => {
 canvi.renderAll();
    });
 }
-
+  const createCursor = (canvi) =>{
+    canvi.off('object:moving')
+  }
   const createClear=(canvi)=>{
     console.log("Activated createClear")
     setCount1(-1)
@@ -95,11 +110,10 @@ canvi.renderAll();
       strokeWidth:5,
       radius:12,
       fill: fill,
-      stroke: '#666',
+      stroke: '#666'
 
     })
     circle.hasControls = circle.hasBorders = true;
-
     circle.line1 = line1;
     circle.line2 = line2;
     circle.line3 = line3;
@@ -111,7 +125,7 @@ canvi.renderAll();
       fill:'red',
       stroke:'red',
       strokeWidth:5,
-      selectable:true
+      selectable:false
     })
 }
 const createEdge = (canvi) =>{
@@ -131,15 +145,27 @@ canvi.on('mouse:down',(e) => {
         if (j.target){// we have clicked on second node
           console.log("second node clicked!")
           var obj2 = canvi.getActiveObject();
-
           const mouseX2 = obj2.left;
           const mouseY2 = obj2.top;
           const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
           canvi.add(newLine);
-          canvi.renderAll();
-          console.log("attempted line creation!")
-          //rerender component to reset to first node search click
-          if (edgeAttempt.current === true){
+          newLine.sendToBack();
+
+
+          obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop
+            var x1 = obj1.left;
+            var y1 = obj1.top;
+            newLine.set({'x1':x1,'y1':y1});
+          };
+          obj2.moveLine = function(){ 
+            var x2 = obj2.left;
+            var y2 = obj2.top;
+            newLine.set({'x2':x2,'y2':y2});
+          };
+          canvi.renderAll(); 
+          
+
+          if (edgeAttempt.current === true){//rerender component to reset to first node search click
             setEdgeAttempt(false)
           }
           else{
@@ -167,13 +193,18 @@ canvi.on('mouse:down',(e) => {
   }
   canvi.renderAll();
 })
+canvi.on('object:moving',function(e){
+  e.target.moveLine();
+  canvi.renderAll();
+})
 }
-
 
   return(
     <div>
       <p>Visited: </p>
       <p>Queue</p>
+      <p>Nodes</p>
+      <p>Edges</p>
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
       />
@@ -188,6 +219,7 @@ canvi.on('mouse:down',(e) => {
       <button onClick={()=>createClear(canvas)}>
         <b>Clear Board</b>
       </button>
+
      <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid black'}} />
     </div>
   );
