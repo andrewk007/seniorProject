@@ -5,13 +5,14 @@ import { fabric } from 'fabric';
 
 //algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
 //creation of underlying graph model:
-//undirected, unweighted graph (first version)
+//undirected, unweighted graph (first version) DONE 
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
 
-
 //miscellaneous issues: concerning canvas movement
 //sticky node moving
+//label nodes with name
+//root node (maybe specify with double click?)
 //***only most recent edge created gets moved (no multi edge dynamic movement) */
 //user can specify root node
 
@@ -60,6 +61,9 @@ class Graph{
       console.log(key,value);
     }
     console.log("TEST");
+  }
+  getEdges(vertex){
+    console.log(this.adjacencyList[vertex])
   }
 }
 const GRAPH = graph;
@@ -120,6 +124,8 @@ const GRAPH = graph;
     console.log("underlying graph: ")
     GRAPH.printGraph();
     setGraph(GRAPH);
+    console.log("edges");
+    GRAPH.getEdges('1');
     console.log("total nodes:",count1.current);
     const mouseX = e.e.layerX;
     const mouseY = e.e.layerY;
@@ -205,6 +211,7 @@ canvi.on('mouse:down',(e) => {
 
 
           obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop
+
             var x1 = obj1.left;
             var y1 = obj1.top;
             newLine.set({'x1':x1,'y1':y1});
