@@ -90,6 +90,8 @@ canvi.renderAll();
       id: id,
       left:left,
       top:top,
+      originX:'center',
+      originY:'center',
       strokeWidth:5,
       radius:12,
       fill: fill,
