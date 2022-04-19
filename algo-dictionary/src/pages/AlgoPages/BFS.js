@@ -1,20 +1,10 @@
-import React,{Component,useState} from 'react'
+import React from 'react'
 import '../AlgoPages/BFS.css'
 
 import Canvas from '../../components/Canvas'
 
-import {FaPlay} from "react-icons/fa";
-import styled from 'styled-components';
-const Button = styled.button`
-width:25px;
-height:25px;
-`;
+
 const BFS =() => {
-
-  const handleClick = () =>{
-      console.log('hello bro');
-  }
-
         return (
       <div class="wrapper">
       <header class="page-header">
@@ -26,10 +16,6 @@ const BFS =() => {
       <main class="page-main">
       </main>
       <div class = 'algo-box'>
-       
-      <Button onClick = {handleClick}>
-      <FaPlay/> 
-      </Button>    
       
       <Canvas/>
       </div>

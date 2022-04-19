@@ -1,6 +1,8 @@
 import React, { useState, useEffect,useRef } from 'react';
 
 
+import {FaPlay} from "react-icons/fa";
+import styled from 'styled-components';
 import { fabric } from 'fabric';
 
 //algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
@@ -18,7 +20,10 @@ import { fabric } from 'fabric';
 
 
 //after all that (BRUH) finally i can implement a BFS, then animation to correspond with that.
-
+const Button = styled.button`
+width:25px;
+height:25px;
+`;
 const Canvas = () => {
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
@@ -63,9 +68,29 @@ class Graph{
     console.log("TEST");
   }
   getEdges(vertex){
-    console.log(this.adjacencyList[vertex])
+    return this.adjacencyList[vertex]
   }
 }
+const breadthFirst= (startVertex,adjacencyList) => {
+  const queue = [startVertex];
+  const result = [];
+  const visited = {};
+  let currentVertex;
+
+  visited[startVertex] = true;
+  while (queue.length){
+    currentVertex = queue.shift();
+    result.push(currentVertex);
+
+    adjacencyList[currentVertex].forEach((neighbor)=>{
+      if (!visited[neighbor]){
+        visited[neighbor] = true;
+        queue.push(neighbor);
+      }
+    });
+  }
+  return result;
+};
 const GRAPH = graph;
 
   const setData1 = x => {
@@ -178,9 +203,21 @@ canvi.renderAll();
       fill:'red',
       stroke:'red',
       strokeWidth:5,
-      selectable:false
+      selectable:false,
+      evented:false
     })
 }
+const selectObject = (objectID,canvi)=>{
+  canvi.getObjects().forEach(function(o) {
+    if (o.id === objectID){
+      return canvas.setActiveObject(o);
+    }
+  })
+}
+const handleClick = () => {
+  //activate algorithm
+  console.log(breadthFirst(1,GRAPH.adjacencyList));
+  }
 const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
@@ -208,13 +245,12 @@ canvi.on('mouse:down',(e) => {
           const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
           canvi.add(newLine);
           newLine.sendToBack();
-
-
           obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop
-
-            var x1 = obj1.left;
-            var y1 = obj1.top;
-            newLine.set({'x1':x1,'y1':y1});
+            const list_edges = GRAPH.getEdges(obj1.get('id'));//returns list of edges of the vertex
+            console.log(list_edges,"edges")
+              var x1 = obj1.left;
+              var y1 = obj1.top;
+              newLine.set({'x1':x1,'y1':y1});
           };
           obj2.moveLine = function(){ 
             var x2 = obj2.left;
@@ -222,8 +258,6 @@ canvi.on('mouse:down',(e) => {
             newLine.set({'x2':x2,'y2':y2});
           };
           canvi.renderAll(); 
-          
-
           if (edgeAttempt.current === true){//rerender component to reset to first node search click
             setEdgeAttempt(false)
           }
@@ -260,6 +294,9 @@ canvi.on('object:moving',function(e){
 
   return(
     <div>
+      <Button onClick = {handleClick}>
+      <FaPlay/> 
+      </Button>
       <p>Visited: </p>
       <p>Queue</p>
       <p>Nodes</p>
