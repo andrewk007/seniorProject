@@ -215,6 +215,7 @@ canvi.renderAll();
       originY:'center'
     });
     const group = new fabric.Group([circle,text],{
+      id:id,
       left:left,
       top:top,
       originX:'center',
