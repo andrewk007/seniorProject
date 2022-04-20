@@ -203,14 +203,14 @@ canvi.renderAll();
       originX:'center',
       originY:'center',
       strokeWidth:5,
-      radius:100,
+      radius:15,
       fill: fill,
-      stroke: '#666',
-      scaleY: 0.4
+      stroke: '#666'
 
     })
-    const text = new fabric.Text(toString(id),{
-      fontSize: 30,
+    
+    const text = new fabric.Text(String(id),{
+      fontSize: 10,
       originX:'center',
       originY:'center'
     });
