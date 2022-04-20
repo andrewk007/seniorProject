@@ -33,6 +33,7 @@ const Canvas = () => {
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
+  const [visitedPath,setPath] = useState('');
   
   //storing the number of edges and number of nodes
 class Graph{
@@ -168,6 +169,7 @@ canvi.renderAll();
     console.log("Activated createClear")
     setGraph(new Graph());
     setCount1(-1);
+    setPath('');
     canvi.remove.apply(canvi,canvi.getObjects())
     canvi.renderAll();
   }
@@ -216,7 +218,9 @@ const selectObject = (objectID,canvi)=>{
 }
 const handleClick = () => {
   //activate algorithm
-  console.log(breadthFirst(1,GRAPH.adjacencyList));
+  var path = breadthFirst(1,GRAPH.adjacencyList);
+  console.log(path);
+  setPath(path);
   }
 const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
@@ -297,7 +301,7 @@ canvi.on('object:moving',function(e){
       <Button onClick = {handleClick}>
       <FaPlay/> 
       </Button>
-      <p>Visited: </p>
+      <p>Visited Path: {visitedPath} </p>
       <p>Queue</p>
       <p>Nodes</p>
       <p>Edges</p>
