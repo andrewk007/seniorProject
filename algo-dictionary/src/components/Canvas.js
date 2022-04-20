@@ -200,22 +200,32 @@ canvi.renderAll();
   const makeCircle = (left,top,id,line1,line2,line3,line4,fill)=>{
     const circle = new fabric.Circle({
       id: id,
-      left:left,
-      top:top,
       originX:'center',
       originY:'center',
       strokeWidth:5,
-      radius:12,
+      radius:100,
       fill: fill,
-      stroke: '#666'
+      stroke: '#666',
+      scaleY: 0.4
 
     })
+    const text = new fabric.Text(toString(id),{
+      fontSize: 30,
+      originX:'center',
+      originY:'center'
+    });
+    const group = new fabric.Group([circle,text],{
+      left:left,
+      top:top,
+      originX:'center',
+      originY:'center'
+    });
     circle.hasControls = circle.hasBorders = true;
     circle.line1 = line1;
     circle.line2 = line2;
     circle.line3 = line3;
     circle.line4 = line4;
-    return circle;
+    return group;
   }
   const makeLine=(coords)=>{
     return new fabric.Line(coords,{
