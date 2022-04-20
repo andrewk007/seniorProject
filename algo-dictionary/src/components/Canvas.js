@@ -1,12 +1,11 @@
 import React, { useState, useEffect,useRef } from 'react';
-
-
 import {FaPlay} from "react-icons/fa";
 import styled from 'styled-components';
 import { fabric } from 'fabric';
 
 //algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
-//creation of underlying graph model:
+
+
 //undirected, unweighted graph (first version) DONE 
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
@@ -18,8 +17,8 @@ import { fabric } from 'fabric';
 //***only most recent edge created gets moved (no multi edge dynamic movement) */
 //user can specify root node
 
-
-//after all that (BRUH) finally i can implement a BFS, then animation to correspond with that.
+//*LOOK HERE FOR TO DO's: got BFS done. BUT no animation right now, and also no labels on nodes
+//also, edges not moving dynamically.
 const Button = styled.button`
 width:25px;
 height:25px;
@@ -101,7 +100,7 @@ const GRAPH = graph;
 
     const setCount1 = x => {
       count1.current = x+1;
-      setCount(x)
+      setCount(prevCount => prevCount + 1)
     }
     const setEdgeAttempt = x =>{
       edgeAttempt.current = x;
@@ -144,20 +143,37 @@ const GRAPH = graph;
     console.log("Running create node");
    canvi.on('mouse:down',function(e){
     if (data1.current === 'node' && e.target === null){
-    addedNode()
-    //add node with underlying graph
-    GRAPH.addVertex(count1.current);
-    console.log("underlying graph: ")
+    const mouseX = e.e.layerX;
+    const mouseY = e.e.layerY;
+    if (count1.current === 0){
+      addedNode()
+      GRAPH.addVertex(count1.current);
+      console.log("underlying graph: ")
     GRAPH.printGraph();
     setGraph(GRAPH);
     console.log("edges");
     GRAPH.getEdges('1');
     console.log("total nodes:",count1.current);
-    const mouseX = e.e.layerX;
-    const mouseY = e.e.layerY;
+    
     const circle = makeCircle(mouseX,mouseY,count1.current,null,null,null,null,'red')
     canvi.add(circle);
     console.log(data1.current)
+    }
+else{
+  addedNode()
+  //add node with underlying graph
+  GRAPH.addVertex(count1.current);
+  console.log("underlying graph: ")
+  GRAPH.printGraph();
+  setGraph(GRAPH);
+  console.log("edges");
+  GRAPH.getEdges('1');
+  console.log("total nodes:",count1.current);
+  
+  const circle = makeCircle(mouseX,mouseY,count1.current,null,null,null,null,'white')
+  canvi.add(circle);
+  console.log(data1.current)
+}
   }
   else{
     console.log("dont create node")
@@ -169,6 +185,7 @@ canvi.renderAll();
     console.log("Activated createClear")
     setGraph(new Graph());
     setCount1(-1);
+    setCount(0);
     setPath('');
     canvi.remove.apply(canvi,canvi.getObjects())
     canvi.renderAll();
@@ -295,16 +312,13 @@ canvi.on('object:moving',function(e){
   canvi.renderAll();
 })
 }
-
   return(
     <div>
       <Button onClick = {handleClick}>
       <FaPlay/> 
       </Button>
-      <p>Visited Path: {visitedPath} </p>
-      <p>Queue</p>
-      <p>Nodes</p>
-      <p>Edges</p>
+      <p>Traversal Path: {visitedPath} </p>
+      <p># of Nodes: {count}</p>
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
       />
