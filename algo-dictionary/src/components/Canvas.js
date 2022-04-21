@@ -15,6 +15,7 @@ import { fabric } from 'fabric';
 //sticky node moving
 //label nodes with name
 //root node (maybe specify with double click?)
+//multiple edges able to be added (DONE)
 //***only most recent edge created gets moved (no multi edge dynamic movement) */
 //user can specify root node
 
@@ -29,7 +30,7 @@ const Canvas = (algorithmName) => {
   const algoName = algorithmName.algoName;
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
-  const [numEdges,setEdges] = useState(0);
+  const [numEdges,setEdges] = useState(0); //number of edges
   const [data,setData] = useState('cursor') //canvas drawing options
   const [secondEdge,setEdge] = useState(false);
   const [graph,setGraph] = useState({})
@@ -37,7 +38,6 @@ const Canvas = (algorithmName) => {
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
   const [visitedPath,setPath] = useState('');
-  console.log("set up",algoName);
 //storing the number of edges and number of nodes
 class Graph{
   constructor(){
@@ -49,7 +49,7 @@ class Graph{
   addEdge(vertex1,vertex2){
     if (this.adjacencyList[vertex1]&&this.adjacencyList[vertex2]){
       this.adjacencyList[vertex1].push(vertex2);
-      //this.adjacencyList[vertex2].push(vertex1); // delete this for a directed graph 
+      this.adjacencyList[vertex2].push(vertex1); // delete this for a directed graph 
     }
   }
   removeEdge(vertex1,vertex2){
@@ -108,7 +108,7 @@ const GRAPH = graph;
     const setEdgeAttempt = x =>{
       edgeAttempt.current = x;
       setEdge(x)
-      setEdges(prevCount => prevCount + 1)
+      
     }
   useEffect(()=>{
     setCanvas(initCanvas());
@@ -210,7 +210,6 @@ canvi.renderAll();
       radius:15,
       fill: fill,
       stroke: '#666'
-
     })
     const text = new fabric.Text(String(id),{
       fontSize: 15,
@@ -231,28 +230,25 @@ canvi.renderAll();
     circle.line4 = line4;
     return group;
   }
-
-
   const makeLine=(coords)=>{
-    const line = new fabric.Line(coords,{
+    var [x1,y1,x2,y2] = coords;
+    const line = new fabric.Line([x1,y1,x2,y2],{
       fill:'red',
       stroke:'red',
       strokeWidth:5,
       selectable:false,
       evented:false
     })
-    const [x1,y1,x2,y2] = coords;
-    const calc_angle = Math.atan2(y2-y1,x2-x1);
-    line.triangle = new fabric.Triangle({
-      width: 10, 
-      height: 15, 
-      fill: 'red', 
-      left: x2, 
-      top: y2,
-      angle: calc_angle
-    })
-    const pointedLine = new fabric.Group([line,line.triangle]);
-    return pointedLine;
+    // line.triangle = new fabric.Triangle({
+    //   width: 15, 
+    //   height: 15, 
+    //   fill: 'red', 
+    //   left: x2, 
+    //   top: y2,
+    //   angle: angle
+    // })
+    //const pointedLine = new fabric.Group([line,line.triangle]);
+    return line;
 }
 const selectObject = (objectID,canvi)=>{
   canvi.getObjects().forEach(function(o) {
@@ -287,30 +283,38 @@ canvi.on('mouse:down',(e) => {
       console.log("This is a node object: first clicked")
       canvi.off('mouse:down')
       canvi.on('mouse:down',(j)=>{
-        if (j.target){// we have clicked on second node
+        if (j.target){// we have clicked on second node\
           console.log("second node clicked!")
           var obj2 = canvi.getActiveObject();
-          const mouseX2 = obj2.left;
-          const mouseY2 = obj2.top;
-          const secondID = obj2.get('id');
-          GRAPH.addEdge(firstID,secondID);
-          GRAPH.printGraph();
-          setGraph(GRAPH);
-          const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
-          canvi.add(newLine);
-          newLine.sendToBack();
-          obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop     
-            const list_edges = GRAPH.getEdges(obj1.get('id'));//returns list of edges of the vertex
-            console.log(list_edges,"edges")
+          const list_edges = GRAPH.getEdges(obj1.get('id'));//returns list of nodes (number) adjacent
+          if (list_edges.includes(obj2.id)){
+            console.log("edge already exists between nodes: ",obj1.id," and ",obj2.id);
+          }
+          else{
+            setEdges(prevCount => prevCount + 1)
+            const mouseX2 = obj2.left;
+            const mouseY2 = obj2.top;
+            const secondID = obj2.get('id');
+            GRAPH.addEdge(firstID,secondID);
+            GRAPH.printGraph();
+            setGraph(GRAPH);
+            const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
+            canvi.add(newLine);
+            newLine.sendToBack();
+            obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop     
+              console.log("obj: ",obj1.id," edges are:",list_edges);
               var x1 = obj1.left;
               var y1 = obj1.top;
               newLine.set({'x1':x1,'y1':y1});
-          };
-          obj2.moveLine = function(){ 
-            var x2 = obj2.left;
-            var y2 = obj2.top;
-            newLine.set({'x2':x2,'y2':y2});
-          };
+            };
+            obj2.moveLine = function(){ 
+              var x2 = obj2.left;
+              var y2 = obj2.top;
+              newLine.set({'x2':x2,'y2':y2});
+            };
+          }
+
+         
           canvi.renderAll(); 
           if (edgeAttempt.current === true){//rerender component to reset to first node search click
             setEdgeAttempt(false)
@@ -340,6 +344,7 @@ canvi.on('mouse:down',(e) => {
   }
   canvi.renderAll();
 })
+//canvi on object moving
 canvi.on('object:moving',function(e){
   e.target.moveLine();
   canvi.renderAll();
