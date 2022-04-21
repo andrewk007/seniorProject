@@ -5,7 +5,7 @@ import Canvas from '../../components/Canvas'
 
 
 const DFS =() => {
-        return (
+    return (
       <div class="wrapper">
       <header class="page-header">
       <h1> DFS- Depth First Search</h1>

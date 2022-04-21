@@ -20,8 +20,8 @@ const App = () => {
           <Route path="/about" element={<About/>}></Route> 
           <Route path="/algorithms" element = {<Algorithms/>}></Route>
           <Route path ="/bfs" element = {<BFS/>}></Route>
-          <Route path = "/shortest" element = {<ShortestPath/>}></Route>
           <Route path = "/dfs" element = {<DFS/>}></Route>
+          <Route path = "/shortest" element = {<ShortestPath/>}></Route>
         </Routes>
       </Router>
     </>

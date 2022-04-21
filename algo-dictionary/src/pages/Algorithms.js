@@ -18,13 +18,13 @@ const algos = [
 },
 {
     id: 2,
-    title:'Shortest Path',
-    link: '/shortest'
+    title:'DFS',
+    link: '/dfs'
 },
 {
     id: 3,
-    title:'DFS',
-    link: '/dfs'
+    title:'Shortest Path',
+    link: '/shortest'
 }
 
 ];

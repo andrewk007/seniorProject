@@ -14,14 +14,11 @@ function ShortestPath() {
       </main>
       <div class = 'algo-box'>
       <Canvas algoName = 'SPH'/>
-  
-
      </div>
       <footer class="page-footer">
       </footer>
     </div>
         );
-
 }
 
 export default ShortestPath
