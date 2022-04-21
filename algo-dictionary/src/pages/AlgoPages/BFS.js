@@ -17,7 +17,7 @@ const BFS =() => {
       </main>
       <div class = 'algo-box'>
       
-      <Canvas/>
+      <Canvas algoName = 'BFS'/>
       </div>
       <footer class="page-footer">
       </footer>

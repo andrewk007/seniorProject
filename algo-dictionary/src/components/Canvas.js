@@ -5,7 +5,6 @@ import { fabric } from 'fabric';
 
 //algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
 
-
 //undirected, unweighted graph (first version) DONE 
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
@@ -23,18 +22,19 @@ const Button = styled.button`
 width:25px;
 height:25px;
 `;
-const Canvas = () => {
+const Canvas = (algorithmName) => {
+  const algoName = algorithmName.algoName;
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
   const [data,setData] = useState('cursor') //canvas drawing options
-  const [secondEdge,setEdge] = useState(false)
+  const [secondEdge,setEdge] = useState(false);
   const [graph,setGraph] = useState({})
   const data1 = React.useRef(data)
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
   const [visitedPath,setPath] = useState('');
-  
-  //storing the number of edges and number of nodes
+  console.log("set up",algoName);
+//storing the number of edges and number of nodes
 class Graph{
   constructor(){
     this.adjacencyList = {};
@@ -92,7 +92,6 @@ const breadthFirst= (startVertex,adjacencyList) => {
   return result;
 };
 const GRAPH = graph;
-
   const setData1 = x => {
     data1.current = x;
     setData(x);
@@ -210,7 +209,7 @@ canvi.renderAll();
     })
     
     const text = new fabric.Text(String(id),{
-      fontSize: 10,
+      fontSize: 15,
       originX:'center',
       originY:'center'
     });
@@ -246,10 +245,15 @@ const selectObject = (objectID,canvi)=>{
 }
 const handleClick = () => {
   //activate algorithm
-  var path = breadthFirst(1,GRAPH.adjacencyList);
-  console.log(path);
-  setPath(path);
+  if (algoName === 'BFS'){
+    var path = breadthFirst(1,GRAPH.adjacencyList);
+    console.log(path);
+    setPath(path);
   }
+  else{
+    console.log("Hello this is :, ",algoName);
+  }
+}
 const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
@@ -344,7 +348,6 @@ canvi.on('object:moving',function(e){
       <button onClick={()=>createClear(canvas)}>
         <b>Clear Board</b>
       </button>
-
      <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid black'}} />
     </div>
   );

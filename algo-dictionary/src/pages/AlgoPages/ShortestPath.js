@@ -12,7 +12,7 @@ function ShortestPath() {
       <main class="page-main">
       </main>
       <div class = 'algo-box'>
-      
+      <Canvas algoName = "SPH"/>
   
 
      </div>
