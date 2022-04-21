@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { fabric } from 'fabric';
 
 //what i need to work on:
-//different algos. then need to make graph weighted, find a way to be able 
-
-//undirected, unweighted graph (first version) DONE 
+//I want to get nodes to move with multiple edges
+// I want nodes to have directional edges (this works in the underlying model), 
+// but its hard to represent graphically with arrows.
 
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
@@ -14,7 +14,7 @@ import { fabric } from 'fabric';
 //miscellaneous issues: concerning canvas movement
 //sticky node moving
 //label nodes with name
-//root node (maybe specify with double click?)
+//root node (maybe specify with double click?) (Nah...)
 //multiple edges able to be added (DONE)
 //***only most recent edge created gets moved (no multi edge dynamic movement) */
 //user can specify root node
@@ -209,10 +209,10 @@ canvi.renderAll();
       strokeWidth:5,
       radius:15,
       fill: fill,
-      stroke: '#666'
+      stroke: '#666',
     })
     const text = new fabric.Text(String(id),{
-      fontSize: 15,
+      fontSize: 20,
       originX:'center',
       originY:'center'
     });
@@ -221,7 +221,9 @@ canvi.renderAll();
       left:left,
       top:top,
       originX:'center',
-      originY:'center'
+      originY:'center',
+      lockMovementX:true,
+      lockMovementY:true
     });
     circle.hasControls = circle.hasBorders = true;
     circle.line1 = line1;
@@ -230,9 +232,10 @@ canvi.renderAll();
     circle.line4 = line4;
     return group;
   }
-  const makeLine=(coords)=>{
+  const makeLine=(coords,id)=>{
     var [x1,y1,x2,y2] = coords;
     const line = new fabric.Line([x1,y1,x2,y2],{
+      id:id,
       fill:'red',
       stroke:'red',
       strokeWidth:5,
@@ -253,7 +256,7 @@ canvi.renderAll();
 const selectObject = (objectID,canvi)=>{
   canvi.getObjects().forEach(function(o) {
     if (o.id === objectID){
-      return canvas.setActiveObject(o);
+      return canvi.setActiveObject(o);
     }
   })
 }
@@ -298,11 +301,10 @@ canvi.on('mouse:down',(e) => {
             GRAPH.addEdge(firstID,secondID);
             GRAPH.printGraph();
             setGraph(GRAPH);
-            const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
+            const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2],count1.current);
             canvi.add(newLine);
             newLine.sendToBack();
             obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop     
-              console.log("obj: ",obj1.id," edges are:",list_edges);
               var x1 = obj1.left;
               var y1 = obj1.top;
               newLine.set({'x1':x1,'y1':y1});
@@ -313,8 +315,6 @@ canvi.on('mouse:down',(e) => {
               newLine.set({'x2':x2,'y2':y2});
             };
           }
-
-         
           canvi.renderAll(); 
           if (edgeAttempt.current === true){//rerender component to reset to first node search click
             setEdgeAttempt(false)
@@ -372,7 +372,7 @@ canvi.on('object:moving',function(e){
       <button onClick={()=>createClear(canvas)}>
         <b>Clear Board</b>
       </button>
-     <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid black'}} />
+     <canvas id="canvas" width = "700" height = "500" style = {{border: '1px solid brown'}} />
     </div>
   );
 }
