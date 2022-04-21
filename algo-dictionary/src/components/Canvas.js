@@ -87,6 +87,33 @@ const breadthFirst= (startVertex,adjacencyList) => {
   }
   return result;
 };
+const shortestPath= (startVertex,adjacencyList,goalVertex) => {
+  return path;
+  //shortest path implementation
+};
+const cycleDetection = (startVertex,adjacencyList)=>{
+  return path;
+}
+const depthFirst= (startVertex,adjacencyList) => {
+  const stack = [startVertex];
+  const result = [];
+  const visited = {};
+  let currentVertex;
+
+  visited[startVertex] = true;
+  while (stack.length){
+    currentVertex = stack.pop();
+    result.push(currentVertex);
+
+    adjacencyList[currentVertex].forEach((neighbor)=>{
+      if (!visited[neighbor]){
+        visited[neighbor] = true;
+        stack.push(neighbor);
+      }
+    });
+  }
+  return result;
+};
 const GRAPH = graph;
   const setData1 = x => {
     data1.current = x;
@@ -234,15 +261,15 @@ canvi.renderAll();
       selectable:false,
       evented:false
     })
-    line.triangle = new fabric.Triangle({
-      width: 15, 
-      height: 15, 
-      fill: 'red', 
-      left: x2, 
-      top: y2,
-      angle: 0
-    })
-    const pointedLine = new fabric.Group([line,line.triangle]);
+    // line.triangle = new fabric.Triangle({
+    //   width: 15, 
+    //   height: 15, 
+    //   fill: 'red', 
+    //   left: x2, 
+    //   top: y2,
+    //   angle: 0
+    // })
+   // const pointedLine = new fabric.Group([line,line.triangle]);
     return line;
 }
 const selectObject = (objectID,canvi)=>{
@@ -259,10 +286,29 @@ const handleClick = () => {
     console.log(path);
     setPath(path);
   }
-  else{
-    console.log("Hello this is :, ",algoName);
+  else if (algoName === 'DFS'){
+    var path = depthFirst(1,GRAPH.adjacencyList);
+    console.log(path);
+    setPath(path);
   }
-}
+  else if(algoName === 'SPH'){
+//call shortest path and generate new eleemnt that allows user to input 
+// the 'destination' node.
+    const finalNode = 4;
+    var path = shortestPath(1,GRAPH.adjacencyList,finalNode);
+    console.log(path);
+    setPath(path);
+  }
+  else if (algoName === 'Cycle'){
+  //call that algo
+  var path = cycleDetection(1,GRAPH.adjacencyList);
+  console.log(path);
+  setPath(path);
+  }
+  else{
+    console.log("Algorithm: ",algoName);
+  }
+  }
 const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
