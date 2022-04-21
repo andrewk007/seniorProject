@@ -4,24 +4,16 @@ import styled from 'styled-components';
 import { fabric } from 'fabric';
 
 //what i need to work on:
-//I want to get nodes to move with multiple edges
+//LINES!!
 // I want nodes to have directional edges (this works in the underlying model), 
 // but its hard to represent graphically with arrows.
+//add more info about underlying graph on canvas
+//then implment the algorithms (cycle detection)
+//add boilerplate information about algos/make UI pretty
 
-//for graphic(add triangle in add line))
-//graph model must have ability to be weighted (i.e. have weighted edges)
-
-//miscellaneous issues: concerning canvas movement
-//sticky node moving
-//label nodes with name
-//root node (maybe specify with double click?) (Nah...)
-//multiple edges able to be added (DONE)
-//***only most recent edge created gets moved (no multi edge dynamic movement) */
-//user can specify root node
-
-//*LOOK HERE FOR TO DO's: got BFS done. BUT no animation right now, and also no labels on nodes
-//also, edges not moving dynamically.
-//making edges directed
+//if you're awesome: you can try and add weighted edges
+//also if you're awesome, make nodes move and edges move too work
+//also another thing: making animations dynamic
 const Button = styled.button`
 width:25px;
 height:25px;
@@ -242,15 +234,15 @@ canvi.renderAll();
       selectable:false,
       evented:false
     })
-    // line.triangle = new fabric.Triangle({
-    //   width: 15, 
-    //   height: 15, 
-    //   fill: 'red', 
-    //   left: x2, 
-    //   top: y2,
-    //   angle: angle
-    // })
-    //const pointedLine = new fabric.Group([line,line.triangle]);
+    line.triangle = new fabric.Triangle({
+      width: 15, 
+      height: 15, 
+      fill: 'red', 
+      left: x2, 
+      top: y2,
+      angle: 0
+    })
+    const pointedLine = new fabric.Group([line,line.triangle]);
     return line;
 }
 const selectObject = (objectID,canvi)=>{
