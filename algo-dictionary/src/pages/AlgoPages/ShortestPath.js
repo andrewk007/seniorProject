@@ -1,5 +1,6 @@
 import React from 'react'
 import '../AlgoPages/ShortestPath.css'
+import Canvas from '../../components/Canvas'
 
 function ShortestPath() {
     return (
@@ -12,7 +13,7 @@ function ShortestPath() {
       <main class="page-main">
       </main>
       <div class = 'algo-box'>
-      <Canvas algoName = "SPH"/>
+      <Canvas algoName = 'SPH'/>
   
 
      </div>
