@@ -328,7 +328,7 @@ canvi.on('object:moving',function(e){
       <Button onClick = {handleClick}>
       <FaPlay/> 
       </Button>
-      <p>Traversal Path: {visitedPath} </p>
+      <p>Traversal Path: [{visitedPath}] </p>
       <p># of Nodes: {count}</p>
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
