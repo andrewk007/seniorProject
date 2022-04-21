@@ -20,6 +20,7 @@ import { fabric } from 'fabric';
 
 //*LOOK HERE FOR TO DO's: got BFS done. BUT no animation right now, and also no labels on nodes
 //also, edges not moving dynamically.
+//making edges directed
 const Button = styled.button`
 width:25px;
 height:25px;
@@ -48,7 +49,7 @@ class Graph{
   addEdge(vertex1,vertex2){
     if (this.adjacencyList[vertex1]&&this.adjacencyList[vertex2]){
       this.adjacencyList[vertex1].push(vertex2);
-      this.adjacencyList[vertex2].push(vertex1);
+      //this.adjacencyList[vertex2].push(vertex1); // delete this for a directed graph 
     }
   }
   removeEdge(vertex1,vertex2){
@@ -230,14 +231,28 @@ canvi.renderAll();
     circle.line4 = line4;
     return group;
   }
+
+
   const makeLine=(coords)=>{
-    return new fabric.Line(coords,{
+    const line = new fabric.Line(coords,{
       fill:'red',
       stroke:'red',
       strokeWidth:5,
       selectable:false,
       evented:false
     })
+    const [x1,y1,x2,y2] = coords;
+    const calc_angle = Math.atan2(y2-y1,x2-x1);
+    line.triangle = new fabric.Triangle({
+      width: 10, 
+      height: 15, 
+      fill: 'red', 
+      left: x2, 
+      top: y2,
+      angle: calc_angle
+    })
+    const pointedLine = new fabric.Group([line,line.triangle]);
+    return pointedLine;
 }
 const selectObject = (objectID,canvi)=>{
   canvi.getObjects().forEach(function(o) {
@@ -284,7 +299,7 @@ canvi.on('mouse:down',(e) => {
           const newLine = makeLine([mouseX1,mouseY1,mouseX2,mouseY2]);
           canvi.add(newLine);
           newLine.sendToBack();
-          obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop
+          obj1.moveLine = function(){//edit so multipile edges can also be moved. i.e., loop     
             const list_edges = GRAPH.getEdges(obj1.get('id'));//returns list of edges of the vertex
             console.log(list_edges,"edges")
               var x1 = obj1.left;

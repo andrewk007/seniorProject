@@ -25,6 +25,11 @@ const algos = [
     id: 3,
     title:'Shortest Path',
     link: '/shortest'
+},
+{
+    id:4,
+    title:'Cycle Detection',
+    link: '/cycle'
 }
 
 ];
