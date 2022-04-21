@@ -3,9 +3,11 @@ import {FaPlay} from "react-icons/fa";
 import styled from 'styled-components';
 import { fabric } from 'fabric';
 
-//algos to be able to be implemented: BFS,DFS,Shortest Path (disjkstra),MST
+//what i need to work on:
+//different algos. then need to make graph weighted, find a way to be able 
 
 //undirected, unweighted graph (first version) DONE 
+
 //for graphic(add triangle in add line))
 //graph model must have ability to be weighted (i.e. have weighted edges)
 
@@ -26,6 +28,7 @@ const Canvas = (algorithmName) => {
   const algoName = algorithmName.algoName;
   const [canvas, setCanvas] = useState('');
   const [count,setCount] = useState(0); //number of nodes 
+  const [numEdges,setEdges] = useState(0);
   const [data,setData] = useState('cursor') //canvas drawing options
   const [secondEdge,setEdge] = useState(false);
   const [graph,setGraph] = useState({})
@@ -68,7 +71,7 @@ class Graph{
     console.log("TEST");
   }
   getEdges(vertex){
-    return this.adjacencyList[vertex]
+    return this.adjacencyList[vertex];
   }
 }
 const breadthFirst= (startVertex,adjacencyList) => {
@@ -104,6 +107,7 @@ const GRAPH = graph;
     const setEdgeAttempt = x =>{
       edgeAttempt.current = x;
       setEdge(x)
+      setEdges(prevCount => prevCount + 1)
     }
   useEffect(()=>{
     setCanvas(initCanvas());
@@ -126,16 +130,15 @@ const GRAPH = graph;
     if (data1.current === 'cursor'){
       console.log("this is equal to cursor: ",data1.current)
     }
-
   },[data1.current,edgeAttempt.current,graph])
   const setAction= (event) =>{
-    console.log("We have changed radio buttons!!!!")
+    console.log("We have changed radio buttons!!!!");
     console.log(event.target.value);
-    setData1(event.target.value)
+    setData1(event.target.value);
   }
   const addedNode = () =>{
-    console.log("Added node!")
-    setCount1(count1.current)
+    console.log("Added node!");
+    setCount1(count1.current);
   }
   const createNode=(canvi)=>{
     canvi.off('mouse:down');
@@ -186,6 +189,7 @@ canvi.renderAll();
     setCount1(-1);
     setCount(0);
     setPath('');
+    setEdges(0);
     canvi.remove.apply(canvi,canvi.getObjects())
     canvi.renderAll();
   }
@@ -207,7 +211,6 @@ canvi.renderAll();
       stroke: '#666'
 
     })
-    
     const text = new fabric.Text(String(id),{
       fontSize: 15,
       originX:'center',
@@ -333,7 +336,8 @@ canvi.on('object:moving',function(e){
       <FaPlay/> 
       </Button>
       <p>Traversal Path: [{visitedPath}] </p>
-      <p># of Nodes: {count}</p>
+      <p>Order: {count}</p>
+      <p>Size: {numEdges} </p>
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
       />
