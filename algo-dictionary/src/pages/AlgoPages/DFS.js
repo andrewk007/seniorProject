@@ -1,14 +1,14 @@
 import React from 'react'
-import '../AlgoPages/BFS.css'
+import '../AlgoPages/DFS.css'
 
 import Canvas from '../../components/Canvas'
 
 
-const BFS =() => {
+const DFS =() => {
         return (
       <div class="wrapper">
       <header class="page-header">
-      <h1> BFS- Breadth First Search</h1>
+      <h1> DFS- Depth First Search</h1>
       <h2> Time Complexity: O(V + E) </h2>
       <h3>Data Structure: Graph</h3>
       <p></p>
@@ -16,7 +16,7 @@ const BFS =() => {
       <main class="page-main">
       </main>
       <div class = 'algo-box'>
-      <Canvas algoName = 'BFS'/>
+      <Canvas algoName = 'DFS'/>
       </div>
       <footer class="page-footer">
       </footer>
@@ -26,4 +26,4 @@ const BFS =() => {
     
     
 
-export default BFS
+export default DFS

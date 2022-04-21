@@ -9,6 +9,7 @@ import About from './pages/About';
 import Algorithms from './pages/Algorithms'
 import BFS from './pages/AlgoPages/BFS'
 import ShortestPath from './pages/AlgoPages/ShortestPath'
+import DFS from './pages/AlgoPages/DFS'
 const App = () => {
   return (
     <>
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/algorithms" element = {<Algorithms/>}></Route>
           <Route path ="/bfs" element = {<BFS/>}></Route>
           <Route path = "/shortest" element = {<ShortestPath/>}></Route>
+          <Route path = "/dfs" element = {<DFS/>}></Route>
         </Routes>
       </Router>
     </>
