@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import { fabric } from 'fabric';
 
 //what i need to work on:
-//LINES!!
-// I want nodes to have directional edges (this works in the underlying model), 
+// I want nodes to have directional arrows (digraphs work in the underlying graph model), 
 // but its hard to represent graphically with arrows.
-//add more info about underlying graph on canvas
-//then implment the algorithms (cycle detection)
 //add boilerplate information about algos/make UI pretty
 
 //if you're awesome: you can try and add weighted edges
@@ -31,6 +28,7 @@ const Canvas = (algorithmName) => {
   const edgeAttempt = React.useRef(secondEdge)
   const [visitedPath,setPath] = useState('');
   const [cycleCondition,setCycle] = useState('');
+  const [finalNode,setTarget] = useState('');
 //storing the number of edges and number of nodes
 class Graph{
   constructor(){
@@ -94,16 +92,13 @@ const shortestPath= (startVertex,adjacencyList,goalVertex) => {
   edges[startVertex] = 0;
   const predecessors = [];
   predecessors[startVertex] = null;
-
+  console.log("THIS IS IT:" ,goalVertex);
   const found = {};
   found[startVertex] = true;
   while(queue.length){
     let v = queue.shift();
-    if (v === goalVertex){
-      return ({
-        distance:edges[goalVertex],
-        path:buildPath(startVertex,goalVertex,predecessors)
-      });
+    if (v === goalVertex){//distance:edges[goalVertex]
+      return buildPath(startVertex,goalVertex,predecessors);
     }
     adjacencyList[v].forEach((neighbor)=>{
       if (!found[neighbor]){
@@ -112,11 +107,9 @@ const shortestPath= (startVertex,adjacencyList,goalVertex) => {
         edges[neighbor] = edges[v]+1;
         predecessors[neighbor]=v;
       }
-
-
     });
   }
-  return false;
+  return "No Path exists";
 };
 
 const buildPath = (startVertex,goalVertex,predecessors)=>{
@@ -356,8 +349,8 @@ const handleClick = () => {
   else if(algoName === 'SPH'){
 //call shortest path and generate new eleemnt that allows user to input 
 // the 'destination' node.
-    const finalNode = 4;
-    var path3 = shortestPath(1,GRAPH.adjacencyList,finalNode);
+console.log("This is the target node" ,finalNode);
+    var path3 = shortestPath(1,GRAPH.adjacencyList,Number(finalNode));
     console.log(path3);
     setPath(path3);
   }
@@ -451,6 +444,9 @@ canvi.on('object:moving',function(e){
   canvi.renderAll();
 })
 }
+const handleChange= (e)=>{
+  this.setState({value:e.target.value});
+}
   return(
     <div>
       <Button onClick = {handleClick}>
@@ -459,18 +455,19 @@ canvi.on('object:moving',function(e){
       {algoName !== 'Cycle' &&
       <p>Traversal Path: [{visitedPath}] </p>
       }
+      <p>Target: {finalNode}</p>
       <p>Order: {count}</p>
       <p>Size: {numEdges} </p>
       {algoName === 'SPH' &&
       <form>
       <label for="input">Target Node: </label>
-      <input type="text" id="targetNode" name = "node">
+      <input type="text" id="targetNode" name = "node" 
+      onChange = {event => setTarget(event.target.value)} >
       </input>
       </form>}
       {algoName === 'Cycle' &&
       <>
       <p>Cycle detected: {cycleCondition}</p>
-
       </>}
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
