@@ -27,7 +27,6 @@ const Canvas = (algorithmName) => {
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
   const [visitedPath,setPath] = useState('');
-  const [cycleCondition,setCycle] = useState('');
   const [finalNode,setTarget] = useState('');
 //storing the number of edges and number of nodes
 class Graph{
@@ -130,7 +129,7 @@ const buildPath = (startVertex,goalVertex,predecessors)=>{
 }
 const cycleDetection = (startVertex,adjacencyList)=>{
   const found = {};
-  let cycleFound = false;
+  let cycleFound = 'False';
   const waiting = [startVertex];
   let parent = startVertex;
   found[startVertex] = true;
@@ -138,14 +137,8 @@ const cycleDetection = (startVertex,adjacencyList)=>{
   while (waiting.length>0){
     currentVertex = waiting.pop();
     adjacencyList[currentVertex].forEach((neighbor)=>{
-      console.log("This is the new node: ",neighbor);
-      console.log("this is the type of neighbor: ",typeof(neighbor));
-      console.log("This is the type of parent ",typeof(parent));
-      console.log("This is the parent: ",parent);
-      console.log("Was this node already encountered? ",found[neighbor]);
     if (neighbor != parent && found[neighbor]){
-      cycleFound = true;
-
+      cycleFound = 'True';
     }
     if (!found[neighbor]){
       found[neighbor] = true;
@@ -154,7 +147,6 @@ const cycleDetection = (startVertex,adjacencyList)=>{
     });
     parent = currentVertex;
   }
-
   return cycleFound;
 }
 const depthFirst= (startVertex,adjacencyList) => {
@@ -356,9 +348,9 @@ console.log("This is the target node" ,finalNode);
   }
   else if (algoName === 'Cycle'){
   //call that algo
-  console.log(GRAPH.adjacencyList);
   var condition = cycleDetection(1,GRAPH.adjacencyList);
-  setCycle(condition);
+  console.log(condition);
+  setPath(condition);
   }
   else{
     console.log("Algorithm: ",algoName);
@@ -455,20 +447,22 @@ const handleChange= (e)=>{
       {algoName !== 'Cycle' &&
       <p>Traversal Path: [{visitedPath}] </p>
       }
-      <p>Target: {finalNode}</p>
+      
       <p>Order: {count}</p>
       <p>Size: {numEdges} </p>
       {algoName === 'SPH' &&
+      <>
+      <p>Target: {finalNode}</p>
       <form>
       <label for="input">Target Node: </label>
       <input type="text" id="targetNode" name = "node" 
       onChange = {event => setTarget(event.target.value)} >
       </input>
-      </form>}
+      </form>
+      </>
+      }
       {algoName === 'Cycle' &&
-      <>
-      <p>Cycle detected: {cycleCondition}</p>
-      </>}
+      <p>Cycle detected: {visitedPath}</p>}
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
       />
