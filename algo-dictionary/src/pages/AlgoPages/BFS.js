@@ -11,9 +11,6 @@ const BFS =() => {
       <h1> BFS- Breadth First Search</h1>
       <h2> Time Complexity: O(V + E) </h2>
       <h3>Data Structure: Graph</h3>
-      <br>
-
-      </br>
       <p>Breadth-First search is a algorithm that allows traversal and exploration of a given graph level by level. 
       In particular, on a undirected, unweighted graph, BFS will iterate through the graph or tree  
       level by level.
