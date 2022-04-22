@@ -30,6 +30,7 @@ const Canvas = (algorithmName) => {
   const count1 = React.useRef(0)
   const edgeAttempt = React.useRef(secondEdge)
   const [visitedPath,setPath] = useState('');
+  const [cycleCondition,setCycle] = useState('');
 //storing the number of edges and number of nodes
 class Graph{
   constructor(){
@@ -88,9 +89,52 @@ const breadthFirst= (startVertex,adjacencyList) => {
   return result;
 };
 const shortestPath= (startVertex,adjacencyList,goalVertex) => {
-  return;
-  //shortest path implementation
+  const queue = [startVertex];
+  const edges = [];
+  edges[startVertex] = 0;
+  const predecessors = [];
+  predecessors[startVertex] = null;
+
+  const found = {};
+  found[startVertex] = true;
+  while(queue.length){
+    let v = queue.shift();
+    if (v === goalVertex){
+      return ({
+        distance:edges[goalVertex],
+        path:buildPath(startVertex,goalVertex,predecessors)
+      });
+    }
+    adjacencyList[v].forEach((neighbor)=>{
+      if (!found[neighbor]){
+        found[neighbor] = true;
+        queue.push(neighbor);
+        edges[neighbor] = edges[v]+1;
+        predecessors[neighbor]=v;
+      }
+
+
+    });
+  }
+  return false;
 };
+
+const buildPath = (startVertex,goalVertex,predecessors)=>{
+  const stack = [];
+  stack.push(goalVertex);
+
+  let u = predecessors[goalVertex];
+
+  while (u!= startVertex){
+    stack.push(u);
+    u = predecessors[u];
+  }
+
+  stack.push(startVertex);
+  let path = stack.reverse().join('-');
+
+  return path;
+}
 const cycleDetection = (startVertex,adjacencyList)=>{
   const found = {};
   let cycleFound = false;
@@ -108,6 +152,7 @@ const cycleDetection = (startVertex,adjacencyList)=>{
       console.log("Was this node already encountered? ",found[neighbor]);
     if (neighbor != parent && found[neighbor]){
       cycleFound = true;
+
     }
     if (!found[neighbor]){
       found[neighbor] = true;
@@ -116,6 +161,7 @@ const cycleDetection = (startVertex,adjacencyList)=>{
     });
     parent = currentVertex;
   }
+
   return cycleFound;
 }
 const depthFirst= (startVertex,adjacencyList) => {
@@ -313,13 +359,13 @@ const handleClick = () => {
     const finalNode = 4;
     var path3 = shortestPath(1,GRAPH.adjacencyList,finalNode);
     console.log(path3);
-    setPath(path);
+    setPath(path3);
   }
   else if (algoName === 'Cycle'){
   //call that algo
   console.log(GRAPH.adjacencyList);
-  var path = cycleDetection(1,GRAPH.adjacencyList);
-  console.log(path);
+  var condition = cycleDetection(1,GRAPH.adjacencyList);
+  setCycle(condition);
   }
   else{
     console.log("Algorithm: ",algoName);
@@ -410,7 +456,9 @@ canvi.on('object:moving',function(e){
       <Button onClick = {handleClick}>
       <FaPlay/> 
       </Button>
+      {algoName !== 'Cycle' &&
       <p>Traversal Path: [{visitedPath}] </p>
+      }
       <p>Order: {count}</p>
       <p>Size: {numEdges} </p>
       {algoName === 'SPH' &&
@@ -421,7 +469,7 @@ canvi.on('object:moving',function(e){
       </form>}
       {algoName === 'Cycle' &&
       <>
-      <p>Cycle detected: {visitedPath}</p>
+      <p>Cycle detected: {cycleCondition}</p>
 
       </>}
       <div onChange={setAction.bind(this)}> 
