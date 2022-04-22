@@ -4,11 +4,11 @@ import '../AlgoPages/DFS.css'
 import Canvas from '../../components/Canvas'
 
 
-const DFS =() => {
+const Cycle =() => {
     return (
       <div class="wrapper">
       <header class="page-header">
-      <h1> DFS- Depth First Search</h1>
+      <h1> Cycle Detection</h1>
       <h2> Time Complexity: O(V + E) </h2>
       <h3>Data Structure: Graph</h3>
       <p></p>
@@ -26,4 +26,4 @@ const DFS =() => {
     
     
 
-export default DFS
+export default Cycle

@@ -88,11 +88,35 @@ const breadthFirst= (startVertex,adjacencyList) => {
   return result;
 };
 const shortestPath= (startVertex,adjacencyList,goalVertex) => {
-  return path;
+  return;
   //shortest path implementation
 };
 const cycleDetection = (startVertex,adjacencyList)=>{
-  return path;
+  const found = {};
+  let cycleFound = false;
+  const waiting = [startVertex];
+  let parent = startVertex;
+  found[startVertex] = true;
+  let currentVertex;
+  while (waiting.length>0){
+    currentVertex = waiting.pop();
+    adjacencyList[currentVertex].forEach((neighbor)=>{
+      console.log("This is the new node: ",neighbor);
+      console.log("this is the type of neighbor: ",typeof(neighbor));
+      console.log("This is the type of parent ",typeof(parent));
+      console.log("This is the parent: ",parent);
+      console.log("Was this node already encountered? ",found[neighbor]);
+    if (neighbor != parent && found[neighbor]){
+      cycleFound = true;
+    }
+    if (!found[neighbor]){
+      found[neighbor] = true;
+      waiting.push(neighbor);
+    }
+    });
+    parent = currentVertex;
+  }
+  return cycleFound;
 }
 const depthFirst= (startVertex,adjacencyList) => {
   const stack = [startVertex];
@@ -261,15 +285,7 @@ canvi.renderAll();
       selectable:false,
       evented:false
     })
-    // line.triangle = new fabric.Triangle({
-    //   width: 15, 
-    //   height: 15, 
-    //   fill: 'red', 
-    //   left: x2, 
-    //   top: y2,
-    //   angle: 0
-    // })
-   // const pointedLine = new fabric.Group([line,line.triangle]);
+
     return line;
 }
 const selectObject = (objectID,canvi)=>{
@@ -282,33 +298,34 @@ const selectObject = (objectID,canvi)=>{
 const handleClick = () => {
   //activate algorithm
   if (algoName === 'BFS'){
-    var path = breadthFirst(1,GRAPH.adjacencyList);
-    console.log(path);
-    setPath(path);
+    var path1 = breadthFirst(1,GRAPH.adjacencyList);
+    console.log(path1);
+    setPath(path1);
   }
   else if (algoName === 'DFS'){
-    var path = depthFirst(1,GRAPH.adjacencyList);
-    console.log(path);
-    setPath(path);
+    var path2 = depthFirst(1,GRAPH.adjacencyList);
+    console.log(path2);
+    setPath(path2);
   }
   else if(algoName === 'SPH'){
 //call shortest path and generate new eleemnt that allows user to input 
 // the 'destination' node.
     const finalNode = 4;
-    var path = shortestPath(1,GRAPH.adjacencyList,finalNode);
-    console.log(path);
+    var path3 = shortestPath(1,GRAPH.adjacencyList,finalNode);
+    console.log(path3);
     setPath(path);
   }
   else if (algoName === 'Cycle'){
   //call that algo
+  console.log(GRAPH.adjacencyList);
   var path = cycleDetection(1,GRAPH.adjacencyList);
   console.log(path);
-  setPath(path);
   }
   else{
     console.log("Algorithm: ",algoName);
   }
   }
+
 const createEdge = (canvi) =>{
 //mouse down: if its an object, get its coordinates
 //second mouse down: if its an object get the second coordinates
@@ -396,6 +413,17 @@ canvi.on('object:moving',function(e){
       <p>Traversal Path: [{visitedPath}] </p>
       <p>Order: {count}</p>
       <p>Size: {numEdges} </p>
+      {algoName === 'SPH' &&
+      <form>
+      <label for="input">Target Node: </label>
+      <input type="text" id="targetNode" name = "node">
+      </input>
+      </form>}
+      {algoName === 'Cycle' &&
+      <>
+      <p>Cycle detected: {visitedPath}</p>
+
+      </>}
       <div onChange={setAction.bind(this)}> 
       <input class="switch" name="iconOn" type="radio" id="on" value = "cursor"
       />
